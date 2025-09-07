@@ -1,5 +1,5 @@
 #Repository stuff
-backend/models/
+backend/models/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
