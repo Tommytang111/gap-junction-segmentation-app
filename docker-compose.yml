@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro  # Mount your trained models here
+      - backend_uploads:/app/uploads
+      - backend_outputs:/app/outputs
+    environment:
+      - MODEL_PATH=/app/models/unet_base_516imgs_sem_adult_8jkuifab.pt
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    environment:
+      - API_BASE_URL=http://backend:8000
+
+volumes:
+  backend_uploads:
+  backend_outputs:
