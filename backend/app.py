@@ -6,8 +6,6 @@
 import os
 import io
 import base64
-import zipfile
-import shutil
 from pathlib import Path
 from typing import List
 import numpy as np
@@ -37,15 +35,31 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Base dir for local runs (backend/)
+BASE_DIR = Path(__file__).resolve().parent
+
 #Configuration
-MODEL_PATH = os.getenv("MODEL_PATH", "/models/unet_base_516imgs_sem_adult_8jkuifab.pt")
-UPLOAD_DIR = Path("/app/uploads")
-OUTPUT_DIR = Path("/app/outputs")
+MODEL_PATH = os.getenv(
+    "MODEL_PATH",
+    str((Path(__file__).resolve().parent / "models" / "unet_base_516imgs_sem_adult_8jkuifab.pt").resolve())
+)
+UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str((Path(__file__).resolve().parent / "uploads").resolve())))
+OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", str((Path(__file__).resolve().parent / "outputs").resolve())))
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 #Create directories
-UPLOAD_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR.mkdir(exist_ok=True)
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# #Configuration
+# MODEL_PATH = os.getenv("MODEL_PATH", "/models/unet_base_516imgs_sem_adult_8jkuifab.pt")
+# UPLOAD_DIR = Path("/app/uploads")
+# OUTPUT_DIR = Path("/app/outputs")
+# DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+# #Create directories
+# UPLOAD_DIR.mkdir(exist_ok=True)
+# OUTPUT_DIR.mkdir(exist_ok=True)
 
 #Global model variable
 model = None
@@ -229,7 +243,7 @@ async def get_evaluation(session_id:str):
         )
         
         #Convert plot to base64
-        img_buffer = io.BytersIO()
+        img_buffer = io.BytesIO()
         fig.savefig(img_buffer, format='png', dpi=150, bbox_inches='tight')
         img_buffer.seek(0)
         img_base64 = base64.b64encode(img_buffer.getvalue()).decode()
