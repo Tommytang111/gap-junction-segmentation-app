@@ -84,8 +84,10 @@ async def home():
         "version": "1.0.0",
         "endpoints": {
             "/": "API information",
-            "/predict-image": "Upload image for image segmentation",
-            "/predict-dataset": "Upload dataset for segmentation"
+            "/upload-dataset": "Upload dataset for segmentation",
+            "/run-inference": "Generates predictions on dataset",
+            "/visualize": "XXX",
+            "/evaluate": "XXX"
         }
     }
     
@@ -93,7 +95,7 @@ async def home():
 async def upload_dataset(files: List[UploadFile] = File(...)):
     """
     Upload a dataset of images and ground truth masks.
-    Expects files to be oranized as: images (*.png) and labels (*_label.png)
+    Expects files to be organized as: images (*.png) and labels (*_label.png)
     """
     try:
         #Create session directory

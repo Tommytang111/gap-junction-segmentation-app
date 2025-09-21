@@ -14,8 +14,8 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🧬 Gap Junction Segmentation Web App")
-st.markdown("Upload your dataset and get AI-powered segmentation results!")
+st.title("Gap Junction Segmentation Online Toolkit")
+st.markdown("Upload a dataset to get started. Visualize, evaluate, and interact with results!")
 
 #Sidebar for navigation
 st.sidebar.title("Navigation")
